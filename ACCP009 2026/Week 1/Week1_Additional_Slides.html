@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ACCP009: Empirical Methods in Finance and Accounting</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Patrick Herbst" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom_p.css" type="text/css" />
+    <link rel="stylesheet" href="print.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: center, middle
+
+
+
+# ACCP009: Empirical Methods in Finance and Accounting
+
+## Week 1 - Additional Study Material
+
+### Patrick Herbst
+### Spring 2026
+
+---
+
+# Section 1: Advanced Distribution Theory
+
+## CDF and Quantile Function
+
+- The cumulative distribution function (CDF) for the random variable `\(X\)` can be defined as
+$$
+F(X) = P(X \le X) = \int_{-\infty}^X f (y)dy
+$$
+
+- The inverse of the CDF is called the quantile function. For a continuous rv `\(X\)`, we get
+$$
+Q(p) = F^{-1}(p)     0 \le p \le 1
+$$
+It is a function from the interval `\((0, 1)\)` to the real numbers which gives, for a given probability `\(p\)`, the value the rv will be at or below with that probability.
+
+---
+
+## Quantiles
+
+- Quantiles are particularly relevant, as they give key percentage points of a given distribution, like the median (p = .5) or the lower (p = .25) and upper (p = .75) quartiles.
+- Quantiles used in particular in QQ-plots and in value-at-risk (VaR) modelling.
+- In hypothesis testing, they are labelled critical values.
+
+
+---
+
+## Kernel Density Estimation
+
+- Solution to the smoothness issue: use a kernel density estimator by choosing a continuous function
+- Population : `\(f (x)\)`; Estimator : `\(\hat{f}(x)\)`
+- KDE places a smooth kernel function (e.g. Gaussian kernel, Epanechnikov kernel) to get a smooth estimate of the density function
+- This is a little different to estimating a single population parameter `\(\theta\)` with `\(\hat\theta\)`, as here we are trying to estimate the distribution at every value `\(x\)` - an infinite dimensional problem!
+
+---
+
+## Histogram - Remarks
+
+- The total area under the rectangles is equal to one, making the upper boundaries of the stacked rectangles a proper density function.
+- The areas covered by the bars represent the relative frequencies of the observed data; the height alone carries sensible information only, when the bandwidth `\(h\)` is equal for all `\(x\)`.
+- Standard output of histogram commands in software packages produces a bar-chart; to display a proper histogram is not straightforward.
+- Histogram can potentially show discontinuities, not always smooth.
+
+---
+
+# Section 2: Statistical Inference
+
+
+## Empirical Counterparts (LLN/CLT)
+
+- The measures discussed above can, again, be estimated from a sample of data `\((x_1, x_2, \ldots, x_T )\)` of size `\(T\)`.
+- We will discuss some frequently used estimators for the moments of return distributions.
+- The link between the sample estimate and the theoretical counterpart is essentially provided by the laws of large numbers (LLN). These give conditions under which, for an infinite sample size, the sample moments converge to their their theoretical counterparts.
+- In order to assess the precision of the estimators for the moments and to be able to perform hypotheses tests, the sampling distribution of the estimators has to be obtained.
+- For this purpose we rely on the force of appropriate central limit theorems (CLT). CLTs state conditions, under which suitably scaled averages of random variables converge in distribution to a non-degenerate limiting distribution.
+
+---
+
+## Sample Mean (special notes)
+
+- The mean of the return distribution is estimated by the sample mean
+`$$\bar{x} = \bar{x}_T = \frac{1}{T} \sum_{t=1}^T x_t$$`
+- Depending on the sampling period, `\(x_T\)` measures the average return of the asset.
+- Note, that if log returns are used, the estimate of the mean of the return distribution using the sample average basically depends on two values only:
+`$$\bar r = \frac{1}{T} \sum_{t=1}^T r_t = \frac{1}{T} \sum_{t=1}^T \log \left( \frac{P_t}{P_{t-1}} \right) = \frac{1}{T} (p_T - p_0)$$`
+In this case, the estimation is quite unreliable. This is a very special situation, where even an increase in the sample size does not lead to a higher precision of the estimate.
+
+
+---
+
+## Central Limit Theorems (CLTs)
+
+'Simple' results are only readily available for iid data, for higher moments normality of the sampling variables is needed in addition.
+
+A standard set of result is as follows:
+$$
+`\begin{aligned}
+\sqrt{T}(\bar x_T - \mu) &amp;\stackrel{d}{\rightarrow} N(0, \sigma^2) \\
+\sqrt{T}(\hat S^2_T - \sigma^2) &amp;\stackrel{d}{\rightarrow} N(0, 2\sigma^4) \\
+\sqrt{T}(\hat{Sk}_T - Sk) &amp;\stackrel{d}{\rightarrow} N(0, 6) \\
+\sqrt{T}(\hat{Ku}_T - Ku) &amp;\stackrel{d}{\rightarrow} N(0, 24)
+\end{aligned}`
+$$
+
+---
+
+## Hypothesis Testing
+
+- Tests of the hypothesis `\(H_0\)`: `\(\mu = \mu_0\)` versus the alternative `\(H_1\)`: `\(\mu \neq \mu_0\)` can be based on the so called `\(t\)` statistics
+$$
+t = \frac{X_T - \mu}{S_T\sqrt{T}}
+$$
+- Decisions on the test outcome are either based on a comparison of critical values with the value of the test statistic, or through a comparison of the empirical p-value with the significance level chosen.
+- For higher moments, similar tests can be conducted based on the following statistics
+$$
+\frac{\hat{Sk}}{\sqrt{6/T}} \text{ and } \frac{\hat{Ku}-3}{\sqrt{24/T}}
+$$
+- Critical values come from a standard normal distribution.
+
+
+---
+
+## Standardization of a RV
+
+- Frequently read: the term 'standardization', meaning using `\(\frac{X-\mu}{\sigma}\)` - Why?
+- If `\(X \sim N(\mu, \sigma^2)\)`, then `\(\frac{X - \mu}{\sigma} \sim N (0, 1)\)`.
+- So `\(\left(\frac{X - \mu}{\sigma}\right)^k\)` can be interpreted as a standardized version of the moments, which are scale invariant.
+- Machine learning approaches frequently use standardized variables.
+
+
+---
+
+# Section 3: Multivariate Analysis
+
+## Multivariate distributions
+
+- Regularly, interest is focused on the joint behaviour of variables, e.g. several returns in a portfolio context.
+- For this purpose we briefly discuss general properties of multivariate distributions of continuous random variables.
+- We discuss various measures of dependency between rvs, like covariance and correlation.
+- If we analyze `\(n \ge 2\)` rvs jointly, a notation using vectors and matrices is often convenient and compact.
+- For the special bivariate case `\(n = 2\)`, which we use for illustrative purposes here, the rvs are often denoted using `\(X\)` and `\(Y\)` to save the index notation.
+
+---
+
+## Bivariate densities
+
+- A formal definition for a bivariate pdf is as follows: a pair of continuously distributed random variables `\((X, Y)\)` has a bivariate pdf `\(f (x, y)\)` if
+$$
+P\{(X, Y) \in A\} = \int \int_A f (x, y)dx dy
+$$
+for all sets A.
+- I.e. the probability of being in any set A can be thought of as the integral over a two-dimensional area.
+- A bivariate density may be seen as a 'mountain' and the probability defined above as the volume of a rectangular vertical shaft in the mountain.
+- The volume of the entire 'mountain' is normalized to one. Its shape depends on marginal densities of `\(X\)` and `\(Y\)` and the type of dependence between the two variables.
+
+---
+
+## Marginal and Conditional Distributions
+
+- From the bivariate distribution two marginal distributions for the rv `\(X\)` and `\(Y\)` alone can be obtained by integrating out the 'other' variable as follows:
+`$$f (x) = \int_{-\infty}^{\infty} f (x, y)dy \text{ and }
+f (y) = \int_{-\infty}^{\infty} f (x, y)dx$$`
+The marginal distributions contain information about the r.v. X and Y 'alone'.
+- From the bivariate distribution we can also obtain the conditional distributions
+$$
+f (y|x) = \frac{f (x, y)}{f(x)} \text{ and }
+f (x|y) = \frac{f (x, y)}{f(y)}
+$$
+- Note: the mean of the conditional distribution, the conditional expectation, is at the heart of regression models and the variance of the conditional distribution is at the heart of models for time-varying volatility. The conditional mean can be described as the best guess about one variable, given the other variable(s).
+
+---
+
+## Independence
+
+- Both concepts introduced above can be employed in defining the independence of rvs
+- Two rvs `\(X\)` and `\(Y\)` are said to be independent, if their joint distribution is the product of their marginals, i.e.
+$$
+f (x, y) = f (x) \cdot f (y)
+$$
+- In terms of the conditional densities, independence means that one variable provides no information for the prediction of the other variable, i.e.
+$$
+f (y|x) = f (y) \text{ and } f (x|y) = f (x)
+$$
+
+---
+
+## Scatterplot(s)
+
+- The graphical presentation of joint distributions is limited to the bivariate case.
+- A simple way to depict the relationship of two continuous rvs is the scatterplot.
+- In the case of `\(n &gt; 2\)` joint rvs, we can depict the bivariate scatterplots for all possible pairs of the rvs - a grid of scatterplots
+
+---
+
+## Measures of Location and Dispersion
+
+- As in the univariate case, there exist useful measures of location and dispersion in the multivariate framework. We will concentrate on the mean vector and the variance-covariance matrix.
+- The mean or expectation vector for the pair of rv `\((X, Y)\)` is simply given by
+$$
+E(\mathbf{X}) = \left[
+`\begin{matrix}
+E(X)
+E(Y)	
+\end{matrix}`
+\right]
+$$
+so this is simply a collection of the expected values of the individual components of the random vector `\(X\)`. Note: The mean vector depends on the marginal distributions only.
+
+---
+
+## Measures of Location and Dispersion
+
+- Based on a sample of size `\(T\)` of data `\((X_t, Y_t)\)` the mean vector can easily be estimated as follows
+$$
+\bar{\mathbf{X}} = \left[
+`\begin{matrix}
+T^{-1} \sum_{i=1}^{T} X_i
+T^{-1} \sum_{i=1}^{T} Y_i
+\end{matrix}`
+\right]
+$$
+- Under suitable conditions, the sample mean vector is a consistent estimator of the true mean vector.
+
+---
+
+## Covariance Matrix
+
+- Finding a suitable measure for the dispersion of the data vector is not so trivial: The elements of the vector have their own dispersion, but the dependence of the elements has to be taken into account as well.
+- A useful measure of the linear dependence is the covariance. For the pair `\((X, Y)\)` this is defined in the usual way
+$$
+Cov(X, Y) = E[(X - E(X))(Y - E(Y))]= E(XY) - E(X)E(Y)
+$$
+- This measure has all the properties known from introductory statistics. In particular it holds trivially, that `\(Cov(X, X) = Var(X)\)`
+- A combined measure of the dispersion of a random vector collects all the possible covariances and variances into a `\((n \times n)\)` variance-covariance matrix, usually denoted by `\(\mathbf{\Sigma}\)`.
+
+---
+
+## Covariance Matrix
+
+- In our two-dimensional example:
+$$
+\mathbf{\Sigma}= Cov(\mathbf{X}) = \left[
+`\begin{matrix}
+Var(X) &amp; Cov(X, Y)
+Cov(X, Y) &amp; Var(Y)
+\end{matrix}`
+\right]
+$$
+`\(\mathbf{\Sigma}\)` is a symmetric and positiv (semi-)definit matrix.
+- The empirical counterpart of `\(\mathbf{\Sigma}\)` is given by
+$$
+\mathbf{S} = \frac{1}{T-1} \sum_{t=1}^T [(\mathbf{X}_t- \bar{\mathbf{X}})(\mathbf{X}_t- \bar{\mathbf{X}})']
+$$
+- A similar statement concerning the relationship of `\(\mathbf{S}\)` with `\(\mathbf{\Sigma}\)` as above applies.
+
+---
+
+## Correlation Matrix
+
+- The covariance is not invariant to scale transformations of the data and therefore, the standardized measure of correlation is regularly preferred. With
+$$
+\rho(X, Y) = \frac{Cov(X,Y)}{\sqrt{Var(x) Var(Y)}}
+$$
+we can obtain the correlation matrix
+$$
+Corr(\mathbf{X}) = \left[
+`\begin{matrix}
+1 &amp; Cor(X,Y)
+Cor(X,Y) &amp; 1
+\end{matrix}`
+\right]
+$$
+
+---
+
+## Independence vs. Uncorrelatedness
+
+- Using the concept of the covariance matrix, we can state the relationship between rvs in terms of uncorrelatedness and independence.
+- If two rvs, `\(X\)` and `\(Y\)` are independent, then for all functions `\(g\)` and `\(h\)`
+$$
+E[g(X)h(Y)] = E[g(X)] E[h(Y)]
+$$
+- If `\(X\)` and `\(Y\)` are independent, then `\(Cov(X, Y) = 0\)`, so the variables are uncorrelated.
+- The opposite is not true. Counter-example?
+
+---
+
+# Section 4: Alternative Dependence Measures
+
+## Rank Correlation
+
+- In a first step, the data is ranked from the smallest (rank 1) to the largest (ranked `\(T\)`, where `\(T\)` is the sample size). Ties (when two or more observations have the same values) are handled by averaging the ranks.
+- In the second step simply use
+$$
+RCor(X, Y) = Cor[rank(X), rank(Y)]
+$$
+- Spearman's rank correlation is between -1 and 1.
+- For testing purposes, it is useful to know that under the null hypothesis of no correlation
+$$
+RCor(X, Y) \stackrel{a}{\sim} N(0, 1/(T - 1))
+$$
+
+---
+
+## Alternative Dependence Measures: Kendall's Tau
+
+- Another alternative measure, popular in empirical finance is Kendalls `\(\tau\)`. It is based on a comparison of changes in one variable `\((x_i - x_j)\)` with changes in the other variable `\((y_i - y_j)\)`.
+- E.g. for three data points `\((x_i, y_i)\)`, `\(i = 1, 2, 3\)`, we first calculate
+`$$\begin{aligned}
+\text{changes of } x &amp; &amp; \text{ changes of } y  \\
+x_2 - x_1 &amp;&amp; y_2 - y_1  \\
+x_3 - x_1 &amp;&amp; y_3 - y_1 \\ 
+x_3 - x_2 &amp;&amp; y_3 - y_2
+\end{aligned}$$`
+which gives 3 pairs (in general `\(T(T - 1)/2\)` pairs.
+
+---
+
+## Kendall's Tau
+
+- Next, we investigate if the pairs are concordant (have the same sign of the change of `\(x\)` and `\(y\)`) or discordant (have different signs) pairs
+$$
+`\begin{aligned}
+ij \text{ is concordant if } (x_j - x_i)(y_j - y_i) &gt; 0 \\
+ij \text{ is discordant if } (x_j - x_i)(y_j - y_i) &lt; 0
+\end{aligned}`
+$$
+- Counting the number of concordant pairs (`\(T_c\)`) and discordant pairs (`\(T_d\)`) we can calculate Kendall's `\(\tau\)`
+$$
+\text{Kendall's } \tau = \frac{T_c-T_d}{T(T-1)/2}
+$$
+- It can be shown that under the null hypothesis of no correlation
+$$
+\text{Kendall's } \tau \stackrel{a}{\sim} N\left( 0, \frac{4T + 10}{9T(T-1)} \right)
+$$
+
+---
+
+# Section 5: Heavy-Tailed Distributions
+
+
+## Heavy-Tailed Distributions
+
+- Distributions with higher tail probabilities compared to a normal are called heavy-tailed. Because kurtosis is particularly sensitive to tail weight, high kurtosis is nearly synonymous with having a heavy tailed distribution.
+- The `\(t\)`-distribution (also known as Student's `\(t\)`-distribution) often employed in models for data with heavy tails, like financial returns.
+
+---
+
+## `\(t\)`-distribution
+
+- Formal definition of a `\(t\)` distributed r.v. Let `\(Z \sim N(0, 1)\)` and `\(W\)` be chi-squared with `\(\nu\)` degrees of freedom. If `\(Z\)` and `\(W\)` are independent, then the ratio `\(Z/\sqrt{W/\nu}\)` follows a `\(t\)`-distribution with `\(\nu\)` degrees of freedom.
+- For the purpose of our analysis, `\(\nu\)` is assumed to be a positive real number.
+- The `\(t\)`-distribution is a one-parameter symmetric distribution with density
+$$
+f (x) = (\nu\pi)^{-0.5}\left(\Gamma (\nu/2)\right)^{-1} \Gamma \left( (\nu +1)/2 \right) \left(1 + x^2/\nu \right)^{-(\nu +1)/2}
+$$
+where `\(\Gamma(.)\)` denotes the gamma function.
+
+---
+
+## Moments of the `\(t\)`-distribution
+
+- For `\(\nu = 1\)`, neither the mean nor, consequently, the variance exists. In fact a `\(t\)`-distribution with `\(\nu = 1\)` is called a Cauchy distribution.
+- For `\(\nu = 2\)`, it can be shown that `\(E(X) = 0\)` and the variance is infinite.
+- For `\(\nu &gt; 2\)` it holds that: `\(E(X) = 0\)` and `\(Var(X) = \nu/(\nu - 2)\)`. From the latter it is evident, that the `\(t\)`-distribution does not have a unit-variance.
+- For `\(\nu &gt; 4\)` the kurtosis exists and it is equal to `\(3 + 6/(\nu - 4)\)`. This value is always greater than 3.
+
+Note: Certain moments of the `\(t\)`-distribution do not exist for some small values of `\(\nu\)`.
+
+---
+
+## `\(t\)`-distribution vs normal distribution
+
+- For low values of `\(\nu\)` the `\(t\)`-distribution exhibits fatter tails than the (standard) normal distribution.
+- As the degrees-of-freedom are increased, the `\(t\)`-distribution converges in probability to a standard normal distribution.
+  (From `\(\nu = 50\)` onward the `\(t\)`-distribution is basically indistinguishable from the standard normal distribution.)
+
+---
+
+## Transformed `\(t\)`-distribution
+
+In order to apply the `\(t\)`-distribution model to return data, we have to introduce a location parameter `\(b \in \mathcal{R}\)` and a scale parameter `\(a &gt; 0\)`.
+
+- Consider the linear transformation `\(b + aX\)`, where `\(X \sim t(\nu)\)`.
+- The amended density takes the form
+$$
+f_{a,b}(x) = a^{-1} f \left( \frac{x-b}{a} \right)
+$$
+- The transformed rv is then `\(t(\nu, a, b)\)`.
+- It has expected value of `\(b\)`, if `\(\nu &gt; 1\)` and variance of `\(a^2 \nu/(\nu - 2)\)` if `\(\nu &gt; 2\)`.
+- This form of the t-distribution is sometimes called the 'classical form'.
+- The parameters of this distribution can be estimated using the maximum likelihood method.
+
+---
+
+## Additional Distributions
+
+- In the search for a distribution model that would allow for even fatter tails, several proposals have been made in the literature. All of them are plagued by problems that make their empirical application difficult.
+- The most prominent class is the class of stable distributions.
+- For stable distributions, the second moment does generally not exist (but for one special case).
+- As a finite second moment (as a measure of risk) is almost always assumed in finance theory (and observed empirically), the family of stable distributions are not compatible with finance applications.
+
+---
+
+## Multivariate Normal and `\(t\)`-Distributions
+
+- The main difference between the multivariate `\(t\)`-distribution and the multivariate normal can be illustrated by looking at variance-covariance matrix of the returns when the elements of the return vector are uncorrelated.
+- Then it holds that this matrix is diagonal in both cases.
+- However, in the case of multivariate normality this also amounts to the independence between the variables, whereas in case of a multivariate `\(t\)` that is not the case.
+- Therefore, with the multivariate `\(t\)`-distribution it is possible to capture possible nonlinear relationships between the variables.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

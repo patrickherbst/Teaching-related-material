@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ACCP009: Empirical Methods in Finance and Accounting</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Patrick Herbst" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom_p.css" type="text/css" />
+    <link rel="stylesheet" href="print.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: center, middle
+
+
+
+# ACCP009: Empirical Methods in Finance and Accounting
+
+## Week 1, Session 1 — Returns and Return Distributions
+
+### Patrick Herbst
+### Spring 2026
+
+---
+
+class: inverse, center, middle
+
+# Welcome to ACCP009
+
+---
+
+# Module Structure
+
+This module runs for **5 weeks** with **two 2-hour PC lab sessions** each week.
+
+**Key features:**
+
+- **Integrated learning**: Theory and practice alternate within each session
+- **Hands-on approach**: All sessions in with coding/Excel exercises
+- **Cumulative analyses**: Analyses build upon each other as much as possible throughout the module
+- **Analysis Tracker Document**: Keep a record of your analyses (code, outputs, interpretations, notes...)
+- **Software flexibility**: Choose Excel, R, or Stata (Excel not always suitable)
+- **Assessment**: 2,000-word empirical analysis report (due Week 6)
+
+---
+
+# Week-by-Week Overview
+
+- **Week 1**: Returns and return distributions
+- **Week 2**: Event studies
+- **Week 3**: Efficient Market Hypothesis and return predictability
+- **Week 4**: Volatility modelling (EWMA, GARCH)
+- **Week 5**: Factor models (CAPM, Fama-French) + assessment preparation
+
+**Today's focus**: Understanding returns, calculating them correctly, and exploring their properties
+
+---
+
+# Software Choices
+
+You may use any of the following:
+
+- **Excel**: Most accessible, good for Weeks 1-3, limited for: GARCH, large analyses
+- **R / RStudio**: Fully supported with separate code files (my own choice)
+- **Stata**: Fully supported with separate code files
+
+**Important notes:**
+
+- R code templates provided on Canvas
+- Stata .do files provided on Canvas
+- Excel instructions provided separately
+- You choose based on your comfort level and future needs
+
+
+---
+
+# Analysis Document Template
+
+You have been provided with an **Analysis Document Template**:
+
+- Pre-structured with sections for all 5 weeks
+- Grey italicized prompts guide you on what to include
+- Replace prompts with your own content each week
+- Keep building on the same document
+
+**Download from Canvas**: `Analysis_Document_Template.docx`
+
+---
+
+class: text-compact
+
+# What to Include Each Week
+
+**Standard structure for each week:**
+
+1. **Brief methodology description**
+   - What did you do? What models/tests?
+   
+2. **Key results**
+   - Tables with statistics
+   - Figures with clear labels
+   
+3. **Interpretation**
+   - What do the results mean?
+   - How do they relate to theory?
+   - What are the implications?
+
+**Remember**: This is NOT a code tutorial or step-by-step guide. Focus on RESULTS and INTERPRETATION.
+
+
+
+---
+
+class: text-compact
+
+# Checkpoint Uploads
+
+
+You should upload your work at **two checkpoints**:
+
+| Checkpoint | End of Week | What to Upload |
+|------------|-------------|----------------|
+| 1 | Week 1, Session 2 | Analysis Doc (Week 1 section) + Code |
+| 2 | Week 4, Session 2 | Analysis Doc (Weeks 1-4) + Code |
+
+
+**Why Checkpoints?**
+
+- Ensure you're on the right track
+- Build progressively rather than all at once
+- Monitor your progress
+- Targeted feedback provided
+- Identify common issues early
+- Ensure everyone stays engaged
+
+**Important**: Checkpoints are formative, not graded
+
+---
+
+class: text-compact
+
+# What to Upload at Checkpoints
+
+**Each checkpoint upload should include TWO files**:
+
+**1. Analysis Document**
+- Word (.docx) or PDF
+- Name: `Surname_FirstName_Analysis_CheckpointX.docx`
+- Example: `Smith_John_Analysis_Checkpoint1.docx`
+- Contains all weeks completed so far
+
+**2. Code File**
+- R script (.R), Stata do-file (.do), or Excel workbook (.xlsx)
+- Name: `Surname_FirstName_Code_CheckpointX.R` (or .do / .xlsx)
+- Example: `Smith_John_Code_Checkpoint1.R`
+- Must be executable and produce results in your document
+
+---
+
+# Why This Approach?
+
+**Traditional approach**: 5 separate assignments, different datasets, disconnected topics
+
+**Our approach**: Build each week's work on previous work towards one document/analysis
+
+
+**Benefits**:
+- Deeper understanding through cumulative learning
+- More realistic (how analysts actually work)
+- Less repetitive work (build on previous weeks)
+- Final assessment is easier (you can get inspiration and re-use code/processes)
+- Portfolio piece you can show employers (if you polish it)
+
+---
+
+# Today's Session Structure
+
+**Lecture blocks**:
+- Why returns? (vs prices)
+- Return calculations (simple and log)
+- Return properties and stylised facts
+
+**Practice tasks**:
+- Task 1: Load and plot data
+- Task 2: Calculate returns
+- Task 2 (cont.): Compare simple vs log returns
+
+**Session philosophy**: Learn by doing
+
+---
+
+class: practice-task, text-compact
+
+# PRACTICE TASK 1: Load and Plot Data
+
+**Objective**: Load the provided data file (`data1.csv`) and create initial visualisations of the price series.
+
+.pull-left[ 
+**Instructions:**
+1. Load `data1.csv` which contains: `Date`, `SP500`, `MSFT`
+2. Ensure Date is formatted correctly
+3. Check for missing values
+4. Plot both price series (separately and combined)
+
+**Expected outputs:**
+- Summary of data structure (dates, number of observations)
+- Price charts for both series
+- Combined chart (consider rebasing to 100)
+]
+
+.pull-right[
+**Interpretation:**
+- Describe overall trends. Major price movements?
+- Which asset appears more volatile visually?
+- How does MSFT performance compare to the S&amp;P 500?
+
+**Software-specific notes:**
+- **R users**: Use `read.csv`
+- **Excel users**: Use Data &gt; Get Data &gt; From Text/CSV
+- **Stata users**: Use `import delimited`
+]
+
+---
+
+class: inverse, center, middle
+
+# Returns (versus Prices)
+
+---
+
+# Why Focus on Returns?
+
+We will focus on describing and analysing the **returns** on financial assets
+
+Although financial analysts often observe prices on their screens such as stock prices, commodity prices, bond prices and exchange rates, the main objective of financial econometrics is to analyze financial returns (mostly)
+
+**Reasons:**
+
+- For an average investor, returns are a **complete and scale free summary** of the investment opportunity
+- As they are scale free, returns can be **easily compared across assets**. For instance, you could compare the annual return of an investment in stocks with an investment in a bond
+- In contrast to prices, returns tend to be **stationary** (more on this later), i.e. are statistically more attractive and easier to model
+
+---
+
+# Why Focus on Returns?
+
+There are, however, several ways to compute returns
+
+**Key question for today:**
+
+- What are the different ways to calculate returns?
+- When should we use each type?
+- How do they differ in practice?
+
+
+---
+
+# One-period Simple Returns
+
+Let `\(P_t\)` be a price of an asset. The simple **gross** return is defined by
+`$$1 + R_t = \frac{P_t}{P_{t-1}}$$`
+`\(\frac{P_t}{P_{t-1}}\)` is also called a price ratio or relative price.
+
+The corresponding simple **net** return is
+`$$R_t = \frac{P_t}{P_{t-1}}-1$$`
+
+Net returns are frequently multiplied by 100 to be in percentage points. (Always be clear about this!)
+
+**Note**: In this course, we work with decimal returns (e.g., 0.01 for 1%) unless stated otherwise.
+
+---
+
+# Multiperiod Returns
+
+The gross return over the most recent k periods is then given by
+`$$1 + R_t(k) = \prod_{j=0}^{k-1} (1 + R_{t-j}) = \frac{P_t}{P_{t-k}}$$`
+Likewise, the simple return is
+`$$R_t(k) = \frac{P_t}{P_{t-k}}-1$$`
+This is often called compound return. (Note, that it is not 'just' the sum of the one-period simple returns.)
+
+It is important to define returns always with respect to a certain time interval. E.g., a statement such as 'the investment achieved a return of 20%' is meaningless unless we specify the horizon in which this return has been achieved.
+
+---
+
+# Continuously Compounded Returns
+
+A geometric average (of returns) is not very convenient to handle. Another type of return, which is approximate but easier to work with, is the **log-return**
+`$$r_t = \ln (1 + R_t ) = \ln \frac{P_t}{P_{t-1}} = p_t - p_{t-1}$$`
+with `\(p_t = \ln P_t\)`.
+
+For `\(R_t\)` small, `\(r_t \approx R_t\)` by a first order Taylor approximation to `\(\ln (1 + x)\)`.
+
+**Intuition**: Log returns represent continuously compounded returns.
+
+---
+
+# Example: Continuous Compounding
+
+There is an account paying `\(m\)` times a year an interest of 10% on a notional of 1 EUR.
+
+| Type | # of payments | Rate in period | capital (EUR) |
+|------|---------------|----------------|---------------|
+| annually | 1 | 0.1 | 1.1000 |
+| semiannually | 2 | 0.05 | 1.1025 |
+| quarterly | 4 | 0.025 | 1.1038 |
+| | `\(m\)` | `\(0.1/m\)` | `\((1 + 0.1/m)^m\)` |
+| continuously | `\(\infty\)` | | `\(e^{0.1} \approx 1.1052\)` |
+
+because `\(\lim_{m\rightarrow \infty}(1 + x/m)^m = \exp(x)\)`. Continuous compounding means that the interest is accrued instantaneously.
+
+---
+
+class: practice-task, text-compact
+
+# PRACTICE TASK 2: Calculate Returns
+
+**Objective**: Calculate both simple returns and log returns for MSFT and S&amp;P500.
+
+.pull-left[
+**Instructions:**
+
+1. Calculate simple net returns: `\(R_t = \frac{P_t - P_{t-1}}{P_{t-1}}\)`
+2. Calculate log returns: `\(r_t = \ln(P_t) - \ln(P_{t-1})\)`
+3. Create columns for all four return series
+4. Plot return time series
+
+**Expected outputs:**
+- Four new columns: `SP500_simple`, `SP500_log`, `MSFT_simple`, `MSFT_log`
+- Time series plots of returns
+
+**Note**: First observation will be NA (no prior price to compare to!)
+]
+
+.pull-right[
+**Interpretation:**
+- Do the return series look similar for both assets?
+- Where do you see spikes (large absolute returns)?
+- Are there periods of higher vs lower volatility?
+
+]
+
+---
+
+# Advantages of Log Returns
+
+- **Time additivity:**
+`$$r_t(k) = \ln[1 + R_t(k)] = r_t + r_{t-1} + \ldots + r_{t-k+1}$$`
+The continuously compounded multiperiod return is simply the sum of continuously compounded one-period returns involved.
+
+- The frequency of compounding does not matter and makes returns across assets more easily comparable.
+
+- The statistical properties of log returns are more tractable as opposed to simple returns; it is far easier to derive the time-series properties of additive processes than of multiplicative processes.
+
+- Log returns can take any value on the real line `\(\mathbb{R}\)`, whereas simple returns are limited from below. Log returns are therefore logically consistent with a normal distribution, while simple returns are not.
+
+---
+
+# Annualization
+
+In the press (and economic interpretations of results), a yearly horizon of the investment returns is often used for comparison purposes. Returns can be annualized by
+`$$\text{Annualized }R_t(k) = \left\{ \prod_{j=0}^{k-1} (1 + R_{t-j} ) \right\}^{f/k} -1$$`
+where `\(f\)` is the frequency of the data, i.e., `\(f = \{1, 4, 12, \ldots\}\)` for yearly, quarterly, monthly data, ....
+
+For `\(f = 1\)` this is a geometric mean of k one-period simple gross returns.
+
+For log-returns, we get:
+`$$\text{Annualized }r_t(k) = \frac{f}{k} \sum_{j=0}^{k-1} r_{t-j}$$`
+where again `\(f\)` is the frequency of the data. So here, we get an arithmetic mean.
+
+**For daily data**: `\(f = 252\)` (number of trading days per year)
+
+---
+
+# Portfolio Returns
+
+A simple net return of a portfolio is a weighted average of simple net returns of the assets involved. Let `\(w_i\)` be a percentage of the portfolio's value invested in asset `\(i = 1, \ldots, n\)`. Then
+`$$R_{p,t} = \sum_{i=1}^n w_i R_{i,t}$$`
+but
+`$$r_{p,t} = \ln (1 + R_{p,t} ) = \ln \left(1 + \sum_{i=1}^n w_i R_{i,t} \right) \neq \sum_{i=1}^n w_i r_{i,t}$$`
+
+Nevertheless you often see `\(r_{p,t} \approx \sum_{i=1}^n w_i r_{i,t}\)` ... !
+
+---
+
+# Simple Returns versus Continuously Compounded Returns
+
+Often you can work interchangeably with both but note:
+
+- `\(r_t \leq R_t\)`
+- Check: is it fit for purpose?
+  E.g., the standard Markowitz `\((\mu, \sigma)\)` optimization is not defined for log-returns ... (without additional constraints)
+- Check: is your choice of exact or only of approximative nature!
+
+**In this course**: We will primarily use **log returns** for their statistical properties.
+
+---
+
+# Treatment of Dividends
+
+In the presence of dividends `\(D_t\)` the definitions of simple and log returns need to be modified to
+`$$R_t = \frac{P_t^{ex} + D_t}{P_{t-1}} -1
+\text{ and }
+r_t = \ln (P_t^{ex} + D_t) - \ln (P_{t-1})$$`
+where `\(P_t^{ex}\)` is taken to be the ex-dividend price of the stock.
+
+- Multiperiod returns are obtained accordingly.
+- Need to be careful about the assumption if dividends are cashed out or re-invested!
+
+Similarly, adjustments for splits, bonus shares etc might be needed!
+
+**Solution in practice**: Use **adjusted close prices** from data providers (Yahoo Finance, Bloomberg, etc.) which already account for dividends, splits, and other corporate actions.
+
+
+---
+
+class: practice-task, text-compact
+
+# PRACTICE TASK 2 (continued): Compare Simple vs Log Returns
+
+**Objective**: Understand the relationship between simple and log returns.
+
+.pull-left[
+**Instructions:**
+
+1. Create scatter plots of simple vs log returns for each asset
+2. Calculate the difference: `\(R_t - r_t\)`
+3. Find the maximum absolute difference
+4. Create comparison plots
+
+**Expected outputs:**
+- Scatter plots showing relationship
+- Statistics on differences
+- Understanding of when they differ
+]
+
+.pull-right[
+**Interpretation:**
+- For what range of returns are simple and log returns approximately equal?
+- When do they differ most? Why?
+- Which return type will you use going forward?
+
+
+**Question to ponder**: What's the log return equivalent of a -100% simple return? Why is this a problem?
+]
+
+---
+
+class: inverse, center, middle
+
+# Summary of Session 1
+
+---
+
+# What We Covered Today
+
+**Theoretical foundations:**
+- Why we focus on returns rather than prices
+- Different types of returns (simple vs log)
+- Properties and advantages of log returns
+- Multiperiod returns and annualization
+
+**Practical skills:**
+- Loading and examining financial data
+- Calculating both simple and log returns
+- Visualising price and return data
+- Understanding the relationship between return types
+
+---
+
+class: text-compact
+
+# Session 1 Checkpoint
+
+**By now, you should be able to:**
+
+- Load financial time series data
+- Calculate simple and log returns correctly
+- Create basic visualisations (prices and returns)
+- Understand when simple and log returns differ
+
+**Coming up in Session 2:**
+- Descriptive statistics for returns
+- Distribution analysis (normality tests)
+- Correlation between assets
+- Introduction to stylised facts
+
+---
+
+# Preparation for Session 2
+
+**Before next time:**
+1. Ensure you can successfully complete Tasks 1-2
+2. Think about: What would you expect a "normal" return distribution to look like?
+3. Optional reading: Cont (2001), "Empirical properties of asset returns: stylized facts and statistical issues", Quantitative Finance 1(2), 223–236.
+
+**Checkpoint upload**: By the end of the week, please upload:
+- Your code file (R/Stata/Excel)
+- A short Analysis Tracker Document with key findings
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

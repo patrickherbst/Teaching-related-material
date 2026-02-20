@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ACCP009: Empirical Methods in Finance and Accounting</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Patrick Herbst" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom_p.css" type="text/css" />
+    <link rel="stylesheet" href="print.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: center, middle
+
+
+
+# ACCP009: Empirical Methods in Finance and Accounting
+
+## Week 1, Session 2 — Return Distributions and Stylized Facts
+
+### Patrick Herbst
+### Spring 2026
+
+---
+
+class: text-compact
+
+# Recap from Session 1
+
+**What we covered:**
+- Why returns rather than prices
+- Simple vs log returns
+- Calculating returns in practice
+
+**Where we are now:**
+- You have price data for MSFT and S&amp;P 500
+- You have calculated log returns
+- You understand the difference between simple and log returns
+
+**Today's focus:**
+- Analyze the statistical properties of returns
+- Test for normality
+- Examine correlation between assets
+- Introduce stylized facts of financial returns
+
+---
+
+# Today's Session Structure
+
+**Lecture blocks**:
+- Stylized facts of asset returns
+- Distribution analysis and moments
+- Correlation and dependence measures
+
+**Practice tasks**:
+- Task 3: Descriptive statistics
+- Task 4: Distribution analysis
+- Task 5: Correlation analysis
+- MVP completion and documentation
+
+**Session philosophy**: More practice, less lecture
+
+---
+
+class: inverse, center, middle
+
+# Stylized Facts for Asset Returns
+
+---
+
+# Stylized Facts for Asset Returns
+
+- An important objective of financial econometrics is to find adequate ways of modeling the observed patterns of financial data.
+- Different assets such as stocks, bonds or commodities should behave differently and be affected by different information or events
+- Still, the (vast) empirical literature on financial time series over the last few decades has revealed that financial asset returns possess some common statistical properties.
+- These properties are often referred to as **stylised facts**.
+
+---
+
+# Stylized Facts for Asset Returns
+
+- In what follows, we look at some of the most important stylised facts.
+- A good starting point is to study summary statistics and to visually inspect a variety of graphs for this purpose. We will at times use the DAX index for illustration.
+- Good resource on stylized facts: Cont (2001), Empirical properties of asset returns: stylized facts and statistical issues, Quantitative Finance 1(2), 223–236.
+
+---
+
+# Key Stylized Facts
+
+**1. Absence of autocorrelations:** (linear) autocorrelations of asset returns are often insignificant, except for very small intraday time scales (microstructure effects come into play).
+  (The white noise assumption for asset returns is difficult to refute.)
+
+**2. Heavy tails:** the (unconditional) distribution of returns seems to display heavier (fatter) tails than compatible with a normal distribution (leptokurtic distribution)
+
+**3. Gain/loss asymmetry:** often one observes large drawdowns in stock prices and stock index values but not equally large upward movements.
+
+---
+
+# Key Stylized Facts (continued)
+
+**4. Gaussian in aggregation:** as one increases the time scale over which returns are calculated, their distribution looks more and more like a normal distribution. In particular, the shape of the distribution is not the same at different time scales.
+
+**5. Volatility clustering:** different measures of volatility display a positive autocorrelation over several days; high volatility events tend to cluster in time.
+
+**6. Dependence in transformations:** The empirical return process is not made up out of strict white noise. Instead, certain transformations of returns show some dependence. For instance, there is positive dependence between absolute and squared returns.
+
+---
+
+class: inverse, center, middle
+
+# Return Distributions
+
+---
+
+# Why Distributions?
+
+- It is useful to treat observed returns as realizations of a random variable (r.v.).
+- We will look at important parameters of return distributions, like the expected return (`\(\mu\)`) or the risk of an investment (`\(\sigma^2\)`)
+- We'll move further on to the correlation of (two or more) return series (`\(\rho\)`)
+- We'll need to discuss the standard normality assumption for return distributions.
+
+---
+
+class: text-compact
+
+# Univariate Random Variables and Their Distribution
+
+A univariate distribution of a random variable `\(X\)` describes the set of all its possible values and their probabilities.
+
+If `\(f (X)\)` is the probability density function (p.d.f.) of a continuous random variable, then the probability that `\(X\)` is between `\(A\)` and `\(B\)` is calculated as the area under the density function from `\(A\)` to `\(B\)`
+$$
+P(A &lt; X &lt; B) = \int_A^B  f (X) dX
+$$
+If e.g. `\(X \sim N(\mu, \sigma^2)\)`, then the probability density function is
+$$
+f (x) = (2\pi \sigma^2)^{-0.5} \exp \left( - \frac{(X-\mu)^2}{2\sigma^2}\right)
+$$
+This is a bell-shaped curve centered on the mean `\(\mu\)` and where the standard deviation `\(\sigma\)` determines the width of the curve.
+
+---
+
+class: text-compact
+
+# Histogram
+
+- A convenient nonparametric estimator for the density function of a random variable is the histogram.
+- The histogram displays continuous data, like returns, in ordered columns using the following stepwise procedure:
+
+1. construct a grid of values of `\(x\)` of length `\(h\)` (bandwidth). E.g., `\(\{\ldots, -1.5, -0.5, 0.5, 1.5, \ldots\}\)` for `\(h = 1\)`;
+2. choose the first value of `\(x\)` and count the number of sample values, `\(x_t\)`, falling in the interval `\((x - h/2, x + h/2)\)`; obtain a rectangle representing `\(x\)` by computing the relative frequency of the sample values;
+3. repeat for all values of `\(x\)`.
+
+Formally, the histogram estimator can be written as
+$$
+\hat{f}(x) = \frac{1}{Th} \sum_{t=1}^T (\text{number of obs. in }(x - h/2, x + h/2))
+$$
+
+---
+
+# QQ-Plots
+
+- Graphical tool to asses the distributional properties of a (return) distribution.
+- Flexible tool, which can be applied to two empirical data sets (to test whether they come from the same population) or to a single data set.
+- In the latter case, the QQ-plot is used to assess if the empirical distribution conforms reasonably well to a prespecified theoretical distribution, for instance, a normal distribution where the mean and variance have been estimated from the data.
+- The QQ-plot is a scatter plot where each point shows a specific percentile (quantile) according to the empirical as well as according to the theoretical distribution.
+- If the empirical data confirm/coincide with the hypothesized distribution, the data points should form a straight line (45-degree) line. All deviations from that signal a departure from the hypothesis.
+
+
+---
+
+class: inverse, center, middle
+
+# Moments
+
+---
+
+class: text-compact
+
+# Moments of a Probability Distribution
+
+- To further study the probability distribution of random variables, a number of numerical characteristics called moments are used. The most prominent being position measures and dispersion measures. We have un-centered and centered moments.
+
+- The un-centered moments of the (continuous) random variable `\(X\)` are defined as
+`$$\mu_k' = E[X^k] = \int_{-\infty}^{\infty} x^k f (x)dx \text{ for } k = 1, 2, \ldots$$`
+
+- When `\(k = 1\)`, we obtain the first un-centered moment of the random variable, which is simply the mean of the random variable
+$$
+\mu_1' = E[X] = \mu
+$$
+
+- The mean is a measure for the location or central tendency of a probability distribution.
+- The mean of a return distribution is associated with the expected return on an investment in a financial asset.
+
+---
+
+class: text-compact
+
+# Centered Moments
+
+- Centered moments (about the mean) are helpful in describing the shape of a probability distribution. They are defined as
+`$$\mu_k = E[(X - \mu)^k] = \int_{-\infty}^{\infty} (x - \mu)^k f (x)dx \text{ for } k = 1, 2, \ldots$$`
+
+- The first centered moment is always zero.
+- The second is the variance of the rv `\(X\)`
+$$
+\mu_2 = \text{Var}(X) = E(X - \mu)^2 = \sigma^2
+$$
+The variance is a dispersion measure of a probability distribution.
+- The standard deviation is the square root of the variance, `\(\sigma = \sqrt{\sigma^2}\)`
+- In finance risk reflects the chance that the actual return on an investment may be very different than the expected return. One way to measure risk is to calculate the variance and standard deviation of the distribution of returns.
+- There are other measures of risk (and volatility)
+
+---
+
+# Skewness
+
+- When `\(k = 3\)`, we obtain the third centered moment `\(\mu_3 = E[(X - \mu)^3]\)`.
+- It is closely related to the skewness of the random variable, denoted as `\(Sk(X)\)`, which is defined as
+$$
+Sk(X) = E\left[ \left(\frac{X-\mu}{\sigma}\right)^3 \right]
+$$
+- Skewness measures the asymmetry of the distribution of a rv. When it is positive, it indicates that large positive realizations of X are more likely. When it is negative, it indicates that large negative realizations of X are more likely.
+
+**For financial returns:**
+- Negative skewness = longer left tail = more extreme losses than gains
+- This is commonly observed in equity returns
+
+---
+
+# Kurtosis
+
+- When `\(k = 4\)`, we obtain the fourth centered moment which is related to the kurtosis:
+$$
+Ku(X) = E\left[ \left(\frac{X-\mu}{\sigma}\right)^4 \right]
+$$
+- Kurtosis measures the thickness of the tails of the distribution.
+- In particular, it measures the tail thickness in relation to the normal distribution. For a normal distribution kurtosis equals 3, so excess kurtosis is measured by `\(Ku(X) - 3\)`.
+
+**For financial returns:**
+- Kurtosis &gt; 3 (leptokurtic) = fat tails = more extreme events than normal distribution predicts
+- This is one of the most robust stylized facts
+
+---
+
+class: text-compact
+
+# Sample Statistics
+
+The measures discussed above can be estimated from a sample of data `\((x_1, x_2, \ldots, x_T )\)` of size `\(T\)`.
+
+- The mean of the return distribution is estimated by the sample mean
+`$$\bar{x} = \bar{x}_T = \frac{1}{T} \sum_{t=1}^T x_t$$`
+
+- The sample variance is the most widely used measure of dispersion and risk:
+`$$S^2 = \hat{S}^2_T = \frac{1}{T-1} \sum_{t=1}^T (x_t-\bar x)^2$$`
+
+- The sample (standardized) skewness and kurtosis are, respectively
+`$$\hat{Sk} = \frac{1}{T} \sum_{t=1}^T \left(\frac{x_t-\bar x}{S}\right)^3
+\; \mbox{ and } \;
+\hat{Ku} = \frac{1}{T} \sum_{t=1}^T \left(\frac{x_t-\bar x}{S}\right)^4$$`
+
+---
+
+# Normality Test
+
+- Based on some of the above measures, one can test the (null) hypothesis of normality using, e.g., the Jarque-Bera test defined as
+$$
+JB = T \left[ \frac{\hat{Sk}^2}{6} + \frac{(\hat{Ku}-3)^2}{24} \right]
+$$
+Asymptotically, under the null, it holds that `\(JB \stackrel{d}{\rightarrow} \chi^2_2\)`
+
+- The idea is that `\(\hat{Sk}\)` should be roughly 0 and `\(\hat{Ku}\)` roughly 3.
+
+- **Interpretation:**
+  - High JB statistic → reject normality
+  - Low p-value (&lt; 0.05) → reject normality
+  - For financial returns: almost always reject normality!
+
+---
+
+class: practice-task, text-compact
+
+# PRACTICE TASK 4: Distribution Analysis
+
+**Objective**: Visually assess whether returns follow a normal distribution and conduct formal tests.
+
+**Key question**: Do returns appear normally distributed?
+
+
+.pull-left[
+**Instructions:**
+1. Create histograms with normal distribution overlay
+2. Create Q-Q plots
+3. Conduct Jarque-Bera test for normality
+4. Interpret results
+
+**Expected outputs:**
+- Histograms with normal overlays for both assets
+- Q-Q plots for both assets
+- JB test statistics and p-values
+- Written interpretation
+
+]
+
+
+.pull-right[
+**How to read Q-Q plots:**
+- Points should lie on the red line if data is normally distributed
+- Deviations at the ends (tails) indicate departure from normality
+- S-shaped pattern = skewness
+- Deviations at both tails = heavy tails (kurtosis)
+
+]
+
+
+
+
+---
+
+class: practice-task, text-compact
+
+# PRACTICE TASK 4: Interpretation
+
+**Questions to answer:**
+
+1. Do the histograms suggest returns are normally distributed?
+   - Look for: symmetric bell shape, no extreme outliers
+   
+2. What do the Q-Q plots reveal about the tails?
+   - Points off the line at extremes = tail issues
+   
+3. What is your conclusion from the Jarque-Bera test?
+   - Almost certain to reject normality for daily returns
+   
+4. If returns are not normal, what are the implications?
+   - Risk measures based on normal distribution (like VaR) may be unreliable
+   - Need more sophisticated models (e.g., t-distribution, GARCH)
+
+**Key stylized fact**: Financial returns typically exhibit fat tails and are NOT normally distributed!
+
+---
+
+class: inverse, center, middle
+
+# Correlation and Dependence
+
+---
+
+# Measures of Dependence
+
+- Using the concept of the covariance matrix, we can state the relationship between rvs in terms of uncorrelatedness and independence.
+- If two rvs, `\(X\)` and `\(Y\)` are independent, then for all functions `\(g\)` and `\(h\)`
+$$
+E[g(X)h(Y)] = E[g(X)] E[h(Y)]
+$$
+- If `\(X\)` and `\(Y\)` are independent, then `\(Cov(X, Y) = 0\)`, so the variables are uncorrelated.
+- The opposite is not true. Counter-example?
+
+---
+
+# Covariance and Correlation
+
+- In our two-dimensional example:
+$$
+\mathbf{\Sigma}= Cov(\mathbf{X}) = \left[
+`\begin{matrix}
+Var(X) &amp; Cov(X, Y) \\
+Cov(X, Y) &amp; Var(Y)
+\end{matrix}`
+\right]
+$$
+`\(\mathbf{\Sigma}\)` is a symmetric and positive (semi-)definite matrix.
+
+- The covariance is not invariant to scale transformations of the data and therefore, the standardized measure of correlation is regularly preferred. With
+$$
+\rho(X, Y) = \frac{Cov(X,Y)}{\sqrt{Var(X) Var(Y)}}
+$$
+
+---
+
+# Empirical Correlation
+
+- The empirical correlation is
+`$$\widehat{Cor}(X,Y) =
+\frac{\sum_{t=1}^{T} (X_t-\bar{X})(Y_t-\bar{Y})}{\sqrt{\left(\sum_{t=1}^{T} (X_t-\bar{X})^2\right)
+\left(\sum_{t=1}^{T} (Y_t-\bar{Y})^2 \right)}}$$`
+
+- Under the null of independent, normally distributed variables, the test statistic
+$$
+t = r \sqrt{\frac{n-2}{1-r^2}}
+$$
+follows a t-distribution with `\(n-2\)` degrees of freedom.
+
+---
+
+class: practice-task, text-compact
+
+# PRACTICE TASK 5: Correlation Analysis
+
+**Objective**: Examine the relationship between MSFT and S&amp;P 500 returns.
+
+**Instructions:**
+
+1. Calculate Pearson correlation coefficient
+2. Test if correlation is statistically significant
+3. Create scatter plot with regression line
+4. Interpret the strength of relationship
+
+**Expected outputs:**
+- Correlation coefficient
+- Test statistic and p-value
+- Scatter plot
+- Interpretation of diversification implications
+
+**Key question**: How closely do MSFT and S&amp;P 500 move together?
+
+---
+
+class: practice-task, text-compact
+
+# PRACTICE TASK 5: Interpretation
+
+**Questions to answer:**
+
+1. How strong is the relationship between MSFT and S&amp;P 500?
+   - Correlation typically 0.4 - 0.7 for individual stocks vs index
+   
+2. Is this relationship statistically significant?
+
+3. Does this surprise you? Why or why not?
+
+4. What does this correlation imply about diversification benefits?
+
+5. How might this correlation change during crises? (Think ahead!)
+   - Correlations often different during market stress
+
+
+**Continue with other tasks**
+
+**Fill in the Analysis Tracker Document**
+
+---
+
+class: inverse, center, middle
+
+# Summary of Week 1
+
+---
+
+class: text-compact
+
+# What We Covered This Week
+
+**Session 1:**
+- Returns vs prices
+- Simple vs log returns
+- Return calculations
+
+**Session 2:**
+- Stylized facts of asset returns
+- Distribution analysis (histograms, Q-Q plots)
+- Moments (mean, variance, skewness, kurtosis)
+- Normality testing (Jarque-Bera)
+- Correlation analysis
+
+**Key takeaway:** Financial returns are NOT normally distributed — they have fat tails and often negative skewness!
+
+---
+
+# Key Stylized Facts Confirmed
+
+1. **Absence of autocorrelations** (returns look like white noise)
+2. **Heavy tails** (kurtosis &gt; 3, confirmed by JB test)
+3. **Gain/loss asymmetry** (negative skewness in many series)
+4. **Volatility clustering** (return plots)
+
+**Will continue to explore in future weeks:**
+- Return predictability (Week 3)
+- Dependence in transformations (week 3)
+- Volatility clustering (Week 4)
+
+
+---
+
+class: text-compact
+
+# Week 1 Complete
+
+.pull-left[
+**What you can now do:**
+- Calculate and analyze financial returns
+- Assess distributional properties
+- Test for normality
+- Examine relationships between assets
+- Document findings
+]
+
+
+.pull-right[
+**Next week (Week 2): Event Studies**
+- How do stock prices react to news (earnings announcements)?
+- The market model
+- Abnormal returns and cumulative abnormal returns
+
+**Preparation:**
+- Review your Week 1 work
+- Think about: What happens when a company announces earnings?
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+### Upload your Week 1 Analysis Tracker to Canvas
+
+### See you in Week 2!
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
